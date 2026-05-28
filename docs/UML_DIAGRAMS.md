@@ -1,186 +1,252 @@
 # 📊 Tarım Asistanı - UML ve Tasarım Dokümantasyonu
 
-Bu dosya, **BLG330 - Web Programlama Dönem Projesi** kapsamında geliştirilen **Tarım Asistanı MERN Stack** uygulamasının mimari ve tasarım diyagramlarını içermektedir. Diyagramlar, doğrudan GitHub ve uyumlu Markdown okuyucularda görüntülenebilen **Mermaid.js** formatında hazırlanmıştır.
+Bu doküman, **BLG330 - Web Programlama Dönem Projesi** gereksinimleri doğrultusunda hazırlanan UML diyagramlarını ve veritabanı şema tasarımlarını içermektedir. Diyagramlar modern **Mermaid.js** formatında hazırlanmış olup, uyumlu herhangi bir Markdown okuyucuda (GitHub vb.) veya Mermaid editörlerinde canlı olarak görüntülenebilir.
 
 ---
 
-## 1. Use-Case Diagram (Kullanım Senaryoları Diyagramı)
+## 1. Use-Case (Kullanım Senaryosu) Diyagramı
 
-Use-Case diyagramı, uygulamanın ana aktörü olan **Çiftçi (Kullanıcı)** ile sistem arasındaki etkileşimleri ve gerçekleştirebileceği işlemleri gösterir.
+Use-Case diyagramı, sistemin ana aktörü olan **Çiftçi (Kullanıcı)** ile sistemin sunduğu fonksiyonel özellikler arasındaki ilişkileri gösterir.
 
 ```mermaid
-graph TB
-    subgraph Aktörler
-        c["🌾 Çiftçi (Kullanıcı)"]
-    end
+usecaseDiagram
+    actor Ciftci as "🌾 Çiftçi (Kullanıcı)"
 
-    subgraph Tarım Asistanı Uygulaması
-        uc1(["Kayıt Ol (Register)"])
-        uc2(["Giriş Yap (Login)"])
-        uc3(["Gösterge Panelini Görüntüle (Dashboard)"])
+    rect "Tarım Asistanı Sistemi"
+        usecase UC_Reg as "Kayıt Ol (Register)"
+        usecase UC_Log as "Giriş Yap (Login)"
+        usecase UC_Me as "Profil Bilgilerini Görüntüle"
         
-        subgraph Tarla Yönetimi (Fields CRUD)
-            uc4(["Yeni Tarla Ekle"])
-            uc5(["Tarlaları Listele"])
-            uc6(["Tarla Bilgilerini Güncelle"])
-            uc7(["Tarla Sil"])
-        end
-
-        subgraph Aktivite Yönetimi (Activities CRUD)
-            uc8(["Yeni Aktivite Ekle (Ekim, Sulama vb.)"])
-            uc9(["Aktiviteleri Listele / Filtrele"])
-            uc10(["Aktivite Bilgilerini Güncelle"])
-            uc11(["Aktivite Kaydını Sil"])
-        end
-
-        subgraph Analiz & Raporlama
-            uc12(["Gider Analizi Görüntüle"])
-            uc13(["Aktivite İstatistiklerini İncele"])
-        end
+        usecase UC_F_Add as "Yeni Tarla Ekle"
+        usecase UC_F_List as "Tarlaları Listele"
+        usecase UC_F_Update as "Tarla Bilgilerini Güncelle"
+        usecase UC_F_Del as "Tarla Sil"
+        
+        usecase UC_A_Add as "Aktivite Kaydı Ekle (Ekim, Sulama vb.)"
+        usecase UC_A_List as "Aktiviteleri Listele ve Filtrele"
+        usecase UC_A_Update as "Aktivite Güncelle"
+        usecase UC_A_Del as "Aktivite Sil"
+        
+        usecase UC_Rep as "Maliyet ve Gelir Raporlarını İncele"
     end
 
-    c --> uc1
-    c --> uc2
-    c --> uc3
-    c --> uc4
-    c --> uc5
-    c --> uc6
-    c --> uc7
-    c --> uc8
-    c --> uc9
-    c --> uc10
-    c --> uc11
-    c --> uc12
-    c --> uc13
+    %% Aktörün Yetkisiz Yapabildiği İşlemler
+    Ciftci --> UC_Reg
+    Ciftci --> UC_Log
+
+    %% Aktörün Yetkili (Giriş Yaptıktan Sonra) Yapabildiği İşlemler
+    Ciftci --> UC_Me
+    Ciftci --> UC_F_Add
+    Ciftci --> UC_F_List
+    Ciftci --> UC_F_Update
+    Ciftci --> UC_F_Del
+    Ciftci --> UC_A_Add
+    Ciftci --> UC_A_List
+    Ciftci --> UC_A_Update
+    Ciftci --> UC_A_Del
+    Ciftci --> UC_Rep
+
+    %% İlişkiler ve Korumalı Rota Gereksinimi
+    note right of UC_Me : "Korumalı Rota (JWT Authorization)"
+    note right of UC_F_Add : "Korumalı Rota (JWT Authorization)"
+    note right of UC_A_Add : "Korumalı Rota (JWT Authorization)"
 ```
 
 ---
 
-## 2. Activity Diagram (Aktivite Akış Diyagramı)
+## 2. Activity (Aktivite / İş Akış) Diyagramı
 
-Aşağıdaki diyagram, sisteme yeni bir **Aktivite Kaydı** (örn: Sulama veya Gübreleme işlemi) eklenirken arka planda ve arayüzde gerçekleşen işlem adımlarını ve karar mekanizmalarını göstermektedir.
+Aşağıdaki diyagram, bir çiftçinin **"Yeni Aktivite Kaydı Oluşturma (Maliyet/Gelir Kaydı)"** sürecinin iş akışını ve sistemin yanıt verme adımlarını gösterir.
 
 ```mermaid
-graph TD
-    Start([Başlangıç: Yeni Aktivite Kaydetme]) --> AuthCheck{Kullanıcı Giriş Yapmış mı?}
-    AuthCheck -- Hayır --> Login[Giriş Sayfasına Yönlendir] --> Start
-    AuthCheck -- Evet --> SelectField[Tarlayı Seç ve Aktivite Formunu Doldur]
-    SelectField --> ValidateForm{Arayüz Validasyonu Geçti mi?}
-    ValidateForm -- Hayır --> ShowError[Arayüzde Hata Mesajı Göster] --> SelectField
-    ValidateForm -- Evet --> Submit[İsteği Sunucuya Gönder (POST /api/activities)]
-    Submit --> BackendValidate{Sunucu Validasyonu ve JWT Kontrolü}
-    BackendValidate -- Hata / Geçersiz Token --> ReturnErr[Hata Yanıtı Dön (400/401/500)] --> ShowError
-    BackendValidate -- Başarılı --> DB[MongoDB'ye Aktivite Verisini Kaydet]
-    DB --> Pop[Aktiviteyi Tarla Bilgisiyle Popüle Et (Populate)]
-    Pop --> Resp[Başarılı Yanıt Dön (201 Created)]
-    Resp --> StateUpdate[React State'ini Güncelle (useState)]
-    StateUpdate --> UI[Dashboard ve Rapor Arayüzlerini Yenile]
-    UI --> End([Bitiş: Aktivite Başarıyla Eklendi])
+stateDiagram-v2
+    [*] --> Dashboard : Giriş Yapılmış
+    Dashboard --> AktivitelerSekmesi : "Aktivite Ekle" Butonuna Basılır
+    
+    state AktivitelerSekmesi {
+        [*] --> TarlaKontrolu
+        TarlaKontrolu --> TarlaEklemeUyarisi : "Kullanıcının Tarlası Yoksa"
+        TarlaEklemeUyarisi --> [*] : Tarla Ekleme Sayfasına Yönlendir
+        
+        TarlaKontrolu --> FormGosterimi : "En Az 1 Tarla Varsa"
+        FormGosterimi --> BilgileriDoldur : "Türü, Miktar, Maliyet, Gelir vb. girilir"
+    }
+
+    BilgileriDoldur --> FormGonder : "Kaydet" Butonuna Basılır
+    
+    state Backend_Dogrulama {
+        [*] --> GirdiValidasyonu
+        GirdiValidasyonu --> HataResponse : "Zorunlu alan eksik veya hatalıysa"
+        GirdiValidasyonu --> DbKayit : "Veri Geçerliyse"
+        
+        HataResponse --> FormGosterimi : Frontend'de Hata Mesajı Gösterilir
+        DbKayit --> RaporlariGuncelle : MongoDB'ye Yazma Başarılı
+    }
+    
+    RaporlariGuncelle --> BasariliToast : "success: true" Döner
+    BasariliToast --> Dashboard : Dashboard Güncel Verilerle Yenilenir
+    Dashboard --> [*]
 ```
 
 ---
 
-## 3. ER Diagram (Veritabanı ER Diyagramı)
+## 3. Veritabanı ER (Entity-Relationship) Diyagramı
 
-Uygulamanın MongoDB (Mongoose) veritabanı şemaları arasındaki ilişkileri (1-to-Many) gösteren Varlık-İlişki (ER) diyagramıdır.
+Mongoose şemaları kullanılarak oluşturulan veritabanı modellerinin (User, Field, Activity) alanlarını ve aralarındaki bire-çok (1:N) ilişkilerini gösteren ER diyagramı.
 
 ```mermaid
 erDiagram
-    User {
-        ObjectId id PK "Birincil Anahtar"
-        string name "Ad Soyad (Zorunlu)"
-        string email "E-mail (Zorunlu, Eşsiz)"
-        string password "Hashlenmiş Şifre (Zorunlu)"
-        string phone "Telefon Numarası"
-        string location "Konum Bilgisi"
-        date createdAt "Oluşturulma Tarihi"
-    }
-    Field {
-        ObjectId id PK "Birincil Anahtar"
-        ObjectId userId FK "User.id (İlişkili Kullanıcı)"
-        string cropName "Ürün Adı (Zorunlu)"
-        number area "Tarla Alanı (Zorunlu)"
-        string areaUnit "Alan Birimi (dönüm, hektar, m²)"
-        date plantingDate "Ekim Tarihi (Zorunlu)"
-        date expectedHarvestDate "Hasat Tarihi (Zorunlu)"
-        string soilType "Toprak Tipi"
-        string waterRequirement "Su İhtiyacı"
-        string status "Durum (Ekim, Büyüme vb.)"
-        string description "Açıklama"
-        array notes "Ekstra Notlar"
-        date createdAt
-    }
-    Activity {
-        ObjectId id PK "Birincil Anahtar"
-        ObjectId fieldId FK "Field.id (İlişkili Tarla)"
-        ObjectId userId FK "User.id (İlişkili Kullanıcı)"
-        string activityType "Aktivite Tipi (Sulama, Ekim vb.)"
-        date date "İşlem Tarihi (Zorunlu)"
-        number duration "Süre (saat)"
-        number quantity "Miktar"
-        string unit "Miktar Birimi (kg, litre)"
-        string weatherCondition "Hava Koşulu"
-        number temperature "Sıcaklık (°C)"
-        number humidity "Nem (%)"
-        string notes "Notlar"
-        number cost "İşlem Maliyeti (₺)"
-        number income "İşlem Geliri (₺)"
-        string result "İşlem Sonucu"
-        date createdAt
+    USER ||--o{ FIELD : "sahiptir (1:N)"
+    USER ||--o{ ACTIVITY : "yapar (1:N)"
+    FIELD ||--o{ ACTIVITY : "ilişkilidir (1:N)"
+
+    USER {
+        ObjectId _id PK
+        String name "Zorunlu, Maks 50 karakter"
+        String email "Zorunlu, Benzersiz (Unique)"
+        String password "Zorunlu, Hashlenmiş (bcrypt)"
+        String phone "İsteğe Bağlı"
+        String location "İsteğe Bağlı"
+        Date createdAt "Default: Date.now"
     }
 
-    User ||--o{ Field : "sahiptir"
-    User ||--o{ Activity : "gerçekleştirir"
-    Field ||--o{ Activity : "içerir"
+    FIELD {
+        ObjectId _id PK
+        ObjectId userId FK "User modeline referans"
+        String cropName "Enum: Buğday, Arpa, Mısır, Pamuk, Domates, Biber, Patlıcan, Soğan, Patates, Diğer"
+        Number area "Zorunlu, Minimum 0.1"
+        String areaUnit "Default: dönüm, Enum: dönüm, hektar, m²"
+        Date plantingDate "Zorunlu"
+        Date expectedHarvestDate "Zorunlu"
+        String soilType "Default: Tınlı, Enum: Killi, Kumlu, Tınlı, Organik"
+        String waterRequirement "Default: Normal"
+        String status "Default: Ekim, Enum: Hazırlık, Ekim, Büyüme, Olgunlaşma, Hasat, Tamamlandı"
+        String description "Maks 500 karakter"
+        Array notes "İçerik ve Tarih tutan dizi"
+        Date createdAt
+    }
+
+    ACTIVITY {
+        ObjectId _id PK
+        ObjectId fieldId FK "Field modeline referans"
+        ObjectId userId FK "User modeline referans"
+        String activityType "Enum: Ekim, Sulama, Gübreleme, İlaçlama, Çapalama, Hasat, Depolama, Diğer"
+        Date date "Default: Date.now"
+        Number duration "Saat Cinsinden"
+        Number quantity "Miktar (litre, kg vs.)"
+        String unit "Default: kg"
+        String weatherCondition "Enum: Güneşli, Bulutlu, Yağmurlu, Kar, Dolu, Rüzgarlı"
+        Number temperature "Sıcaklık (°C)"
+        Number humidity "Nem Oranı (%, 0-100)"
+        String notes "Maks 1000 karakter"
+        Array images "Görsel URL dizisi"
+        Number cost "Default: 0 ₺"
+        Number income "Default: 0 ₺"
+        String result "Maks 500 karakter"
+        Date createdAt
+    }
 ```
 
 ---
 
-## 4. Component Relationship Diagram (React Bileşen Diyagramı)
+## 4. Component Relationship (React Bileşen Hiyerarşisi) Diyagramı
 
-React (Frontend) tarafındaki bileşenlerin hiyerarşik ilişkisini, yönlendirme (React Router) yapısını ve global state (`AuthContext`) paylaşımını gösteren diyagramdır.
+React uygulamasının (Frontend) bileşen ağacını, global Context sarmalayıcısını ve korumalı rotaların sayfa bileşenleriyle ilişkisini gösteren yapı şeması.
 
 ```mermaid
 graph TD
-    App[App.jsx] --> Router[React Router]
-    App --> AuthProvider[AuthProvider - AuthContext.js]
+    %% Global Wrappers
+    App[App.jsx - Root Router]
+    AuthProvider[AuthContext.js - AuthProvider]
+    GlobalCSS[global.css & navbar.css]
     
-    subgraph Ortak Bileşenler
-        Navbar[Navbar.jsx]
-        ProtectedRoute[ProtectedRoute.jsx]
-        LoadingSpinner[LoadingSpinner.jsx]
-        Alert[Alert.jsx]
-    end
+    %% Navigation
+    Navbar[Navbar.jsx - Ortak Navigasyon]
 
-    subgraph Sayfalar
-        Home[Home.jsx]
-        LoginPage[LoginPage.jsx] --> LoginForm[LoginForm.jsx]
-        RegisterPage[RegisterPage.jsx] --> RegisterForm[RegisterForm.jsx]
-        
-        subgraph Korumalı Sayfalar (Protected Routes)
-            Dashboard[Dashboard.jsx]
-            FieldsPage[FieldsPage.jsx] --> FieldCard[FieldCard.jsx]
-            FieldsPage --> FieldForm[FieldForm.jsx]
-            
-            ActivitiesPage[ActivitiesPage.jsx] --> ActivityCard[ActivityCard.jsx]
-            ActivitiesPage --> ActivityForm[ActivityForm.jsx]
-            
-            ReportsPage[ReportsPage.jsx]
-        end
-    end
-
-    Router --> Home
-    Router --> LoginPage
-    Router --> RegisterPage
-    Router --> ProtectedRoute
+    %% Routes
+    Routes{React Router Dom - Routes}
     
+    %% Public Pages
+    Home[Home.jsx - Tanıtım Sayfası]
+    LoginPage[LoginPage.jsx]
+    RegisterPage[RegisterPage.jsx]
+    LoginForm[LoginForm.jsx]
+    RegisterForm[RegisterForm.jsx]
+    
+    %% Protected Route Middleware
+    ProtectedRoute[ProtectedRoute.jsx - Auth Guard]
+
+    %% Protected Pages
+    Dashboard[Dashboard.jsx - Özet İstatistikler]
+    FieldsPage[FieldsPage.jsx - Tarla Yönetimi]
+    ActivitiesPage[ActivitiesPage.jsx - İşlem Takibi]
+    ReportsPage[ReportsPage.jsx - Finansal Raporlar]
+
+    %% Child Components
+    FieldCard[FieldCard.jsx - Tarla Kartı]
+    FieldForm[FieldForm.jsx - Ekle/Düzenle Formu]
+    ActivityCard[ActivityCard.jsx - Aktivite Kartı]
+    ActivityForm[ActivityForm.jsx - Ekle/Düzenle Formu]
+    
+    %% Common UI Helpers
+    LoadingSpinner[LoadingSpinner.jsx]
+    Alert[Alert.jsx - Bilgi Mesajı]
+
+    %% Hiyerarşik Bağlantılar
+    App --> AuthProvider
+    AuthProvider --> GlobalCSS
+    AuthProvider --> Navbar
+    AuthProvider --> Routes
+
+    %% Rotaya Göre Sayfalar
+    Routes -->|/| Home
+    Routes -->|/login| LoginPage
+    Routes -->|/register| RegisterPage
+    Routes -->|Korumalı Rotalar| ProtectedRoute
+
+    LoginPage --> LoginForm
+    RegisterPage --> RegisterForm
+
+    %% Korumalı Sayfalar
     ProtectedRoute --> Dashboard
     ProtectedRoute --> FieldsPage
     ProtectedRoute --> ActivitiesPage
     ProtectedRoute --> ReportsPage
 
-    AuthProvider -.->|Global State: user, token, login, logout| LoginPage
-    AuthProvider -.->|Global State: user, token, login, logout| RegisterPage
-    AuthProvider -.->|Global State: user, token, login, logout| Navbar
-    AuthProvider -.->|Global State: user, token, login, logout| ProtectedRoute
+    %% Bileşenlerin Çocukları
+    FieldsPage --> FieldCard
+    FieldsPage --> FieldForm
+    ActivitiesPage --> ActivityCard
+    ActivitiesPage --> ActivityForm
+
+    %% Ortak UI Kullanımları
+    Dashboard -.-> LoadingSpinner
+    Dashboard -.-> Alert
+    FieldsPage -.-> LoadingSpinner
+    FieldsPage -.-> Alert
+    ActivitiesPage -.-> LoadingSpinner
+    ActivitiesPage -.-> Alert
+    ReportsPage -.-> LoadingSpinner
+    ReportsPage -.-> Alert
+
+    classDef wrapper fill:#e1f5fe,stroke:#039be5,stroke-width:2px;
+    classDef page fill:#efebe9,stroke:#5d4037,stroke-width:2px;
+    classDef component fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef helper fill:#fffde7,stroke:#fbc02d,stroke-dasharray: 5 5;
+
+    class App,AuthProvider,Routes,ProtectedRoute wrapper;
+    class Home,LoginPage,RegisterPage,Dashboard,FieldsPage,ActivitiesPage,ReportsPage page;
+    class Navbar,LoginForm,RegisterForm,FieldCard,FieldForm,ActivityCard,ActivityForm component;
+    class LoadingSpinner,Alert helper;
 ```
+
+---
+
+## 💡 Diyagramları Raporunuz için PDF veya Görsele Dönüştürme Yolu
+
+Mermaid diyagramlarını Word veya PDF formatındaki proje raporunuza eklemek için şu adımları takip edebilirsiniz:
+
+1. **[Mermaid Live Editor](https://mermaid.live/)** adresine gidin.
+2. Yukarıdaki diyagram kodlarından birini kopyalayıp sol taraftaki kod alanına yapıştırın.
+3. Sağ alt köşedeki **"PNG"** veya **"SVG"** indirme butonlarına basarak diyagramı yüksek kalitede bilgisayarınıza indirin.
+4. İndirdiğiniz görseli projenizin rapor dosyasına doğrudan ekleyebilirsiniz.
