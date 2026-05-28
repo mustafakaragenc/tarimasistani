@@ -31,10 +31,6 @@ Tarım Asistanı, çiftçilerin tarlalarında ekim, sulama, hasat, aktivite taki
 
 - Eklenecek
 
-## 📊 UML ve Tasarım Dokümantasyonu
-
-Projeye ait Use-Case, Activity, ER ve Component diyagramları [docs/UML_DIAGRAMS.md](file:///c:/Users/mustafa/OneDrive/Masaüstü/26%20bahar%20projelri/web/docs/UML_DIAGRAMS.md) dosyasında Mermaid.js formatında detaylı bir şekilde sunulmuştur. Rapor dosyasına eklemek için yüksek çözünürlüklü çıktı alma yönergeleri bu dosyada mevcuttur.
-
 ## API Endpoint Listesi
 
 - POST /api/auth/register
