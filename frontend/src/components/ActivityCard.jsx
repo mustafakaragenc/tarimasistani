@@ -78,8 +78,15 @@ const ActivityCard = ({ activity, onEdit, onDelete }) => {
 
           {activity.cost > 0 && (
             <div>
-              <p className="text-muted mb-sm">Maliyet</p>
-              <p style={{ fontWeight: '600', color: '#EF4444' }}>{activity.cost} ₺</p>
+              <p className="text-muted mb-sm">Gider</p>
+              <p style={{ fontWeight: '600', color: 'var(--error-red)' }}>{activity.cost} ₺</p>
+            </div>
+          )}
+
+          {activity.income > 0 && (
+            <div>
+              <p className="text-muted mb-sm">Gelir</p>
+              <p style={{ fontWeight: '600', color: 'var(--success-green)' }}>{activity.income} ₺</p>
             </div>
           )}
         </div>

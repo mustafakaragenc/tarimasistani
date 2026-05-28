@@ -12,7 +12,8 @@ const ActivityForm = ({ activity, fields, onSubmit, onCancel, loading }) => {
     temperature: '',
     humidity: '',
     notes: '',
-    cost: '0'
+    cost: '0',
+    income: '0'
   });
 
   useEffect(() => {
@@ -28,7 +29,8 @@ const ActivityForm = ({ activity, fields, onSubmit, onCancel, loading }) => {
         temperature: activity.temperature || '',
         humidity: activity.humidity || '',
         notes: activity.notes || '',
-        cost: activity.cost || '0'
+        cost: activity.cost || '0',
+        income: activity.income || '0'
       });
     }
   }, [activity]);
@@ -49,7 +51,7 @@ const ActivityForm = ({ activity, fields, onSubmit, onCancel, loading }) => {
 
   return (
     <form onSubmit={handleSubmit} className="card">
-      <h3 className="mb-md">{activity ? '✏️ Aktiviteyi Güncelle' : '📝 Yeni Aktivite Ekle'}</h3>
+      <h3 className="mb-md" style={{ fontFamily: 'var(--font-serif)', color: 'var(--dark-green)' }}>{activity ? 'Aktiviteyi Güncelle' : 'Yeni Aktivite Ekle'}</h3>
 
       <div className="grid grid-2 gap-md">
         <div className="form-group">
@@ -188,12 +190,26 @@ const ActivityForm = ({ activity, fields, onSubmit, onCancel, loading }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="cost">Maliyet (₺)</label>
+          <label htmlFor="cost">Gider (₺)</label>
           <input
             type="number"
             id="cost"
             name="cost"
             value={formData.cost}
+            onChange={handleChange}
+            step="0.01"
+            min="0"
+            placeholder="0"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="income">Gelir (₺)</label>
+          <input
+            type="number"
+            id="income"
+            name="income"
+            value={formData.income}
             onChange={handleChange}
             step="0.01"
             min="0"

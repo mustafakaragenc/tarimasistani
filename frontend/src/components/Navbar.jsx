@@ -16,7 +16,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          🌾 Tarım Asistanı
+          TARIM ASİSTANI
         </Link>
 
         {isAuthenticated ? (
@@ -47,11 +47,9 @@ const Navbar = () => {
             <div className="nav-user">
               <div className="user-info">
                 <div className="user-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
-                <div>
-                  <p style={{ margin: 0, fontWeight: '600' }}>{user?.name}</p>
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--gray-text)' }}>
-                    {user?.email}
-                  </p>
+                <div className="user-details">
+                  <p className="user-name">{user?.name}</p>
+                  <p className="user-email">{user?.email}</p>
                 </div>
               </div>
               <button className="logout-btn" onClick={handleLogout}>
@@ -61,10 +59,10 @@ const Navbar = () => {
           </>
         ) : (
           <div className="nav-user">
-            <Link to="/login" className="btn btn-primary btn-small">
+            <Link to="/login" className="btn btn-secondary btn-small">
               Giriş Yap
             </Link>
-            <Link to="/register" className="btn btn-secondary btn-small">
+            <Link to="/register" className="btn btn-yellow btn-small">
               Kayıt Ol
             </Link>
           </div>

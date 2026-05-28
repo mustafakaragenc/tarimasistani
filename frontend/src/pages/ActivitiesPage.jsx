@@ -112,7 +112,7 @@ const ActivitiesPage = () => {
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
         <div className="flex-between">
           <div>
-            <h1>📝 Aktiviteler</h1>
+            <h1>Aktiviteler</h1>
             <p className="text-muted">Toplam {activities.length} aktivite</p>
           </div>
           <button

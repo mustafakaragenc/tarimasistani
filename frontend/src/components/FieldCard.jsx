@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 const FieldCard = ({ field, onEdit, onDelete }) => {
   const navigate = useNavigate();
   const statusColors = {
-    'Hazırlık': '#6B7280',
-    'Ekim': '#3B82F6',
-    'Büyüme': '#10B981',
-    'Olgunlaşma': '#F59E0B',
-    'Hasat': '#EF4444',
-    'Tamamlandı': '#8B5CF6'
+    'Hazırlık': '#5C665A',  /* Earthy Slate */
+    'Ekim': '#7C9A70',      /* Sage Green */
+    'Büyüme': '#5B8254',    /* Organic Green */
+    'Olgunlaşma': '#E29E2B', /* Warm Amber */
+    'Hasat': '#D94626',     /* Organic Rust Red */
+    'Tamamlandı': '#2D4A22'  /* Deep Forest Green */
   };
 
   const daysRemaining = new Date(field.expectedHarvestDate) - new Date();

@@ -65,6 +65,11 @@ const activitySchema = new mongoose.Schema(
       default: 0,
       description: 'İşlem maliyeti (₺)'
     },
+    income: {
+      type: Number,
+      default: 0,
+      description: 'İşlem geliri (₺)'
+    },
     result: {
       type: String,
       maxlength: 500,

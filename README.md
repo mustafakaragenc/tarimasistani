@@ -39,3 +39,5 @@ Tarım Asistanı, çiftçilerin tarlalarında ekim, sulama, hasat, aktivite taki
 - CRUD: /api/fields
 - CRUD: /api/activities
 "# tarimasistani"  
+
+## örn kullanıcı  mustafa@gmail.com 123456

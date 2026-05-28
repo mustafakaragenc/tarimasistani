@@ -95,7 +95,7 @@ const FieldsPage = () => {
       <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
         <div className="flex-between">
           <div>
-            <h1>🌾 Tarlalarım</h1>
+            <h1>Tarlalarım</h1>
             <p className="text-muted">Toplam {fields.length} tarla</p>
           </div>
           <button

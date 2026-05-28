@@ -45,7 +45,7 @@ const RegisterForm = () => {
   return (
     <div className="container" style={{ maxWidth: '400px' }}>
       <div className="card mt-lg">
-        <h2 className="text-center mb-lg">📝 Kayıt Ol</h2>
+        <h2 className="text-center mb-lg">Kayıt Ol</h2>
 
         {message && (
           <div className={`alert alert-${message.type}`}>{message.text}</div>
@@ -115,7 +115,7 @@ const RegisterForm = () => {
           </button>
         </form>
 
-        <p className="text-center mt-lg">
+        <p className="text-center mt-lg" style={{ fontSize: '0.9rem' }}>
           Zaten bir hesabınız var mı?{' '}
           <a href="/login" style={{ fontWeight: '600' }}>
             Giriş Yapın

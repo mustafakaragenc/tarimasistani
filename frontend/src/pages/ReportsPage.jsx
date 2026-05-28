@@ -48,9 +48,9 @@ const ReportsPage = () => {
 
   return (
     <div className="container">
-      <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
-        <h1>📊 Raporlar</h1>
-        <p className="text-muted">Tarla performansı ve analiz verileri</p>
+      <div style={{ marginTop: '2.5rem', marginBottom: '2.5rem' }}>
+        <h1 style={{ fontFamily: 'var(--font-serif)', color: 'var(--dark-green)', marginBottom: '0.5rem', fontWeight: '500' }}>Raporlar</h1>
+        <p className="text-muted" style={{ fontSize: '1.05rem' }}>Tarla performansı ve analiz verileri</p>
       </div>
 
       {error && <Alert type="error" message={error} />}
@@ -75,7 +75,7 @@ const ReportsPage = () => {
         <>
           {/* Tarla Özeti */}
           <div className="card mb-lg">
-            <h2 className="mb-md">🌾 Tarla Özeti</h2>
+            <h2 className="mb-md" style={{ fontFamily: 'var(--font-serif)', color: 'var(--dark-green)', fontWeight: '500' }}>Tarla Özeti</h2>
             <div className="grid grid-4 gap-md">
               <div>
                 <p className="text-muted mb-sm">Ürün</p>
@@ -98,57 +98,59 @@ const ReportsPage = () => {
             </div>
           </div>
 
-          {/* Maliyet Analizi */}
+          {/* Gider Analizi */}
           <div className="card mb-lg">
-            <h2 className="mb-md">💰 Maliyet Analizi</h2>
+            <h2 className="mb-md" style={{ fontFamily: 'var(--font-serif)', color: 'var(--dark-green)', fontWeight: '500' }}>Gider Analizi</h2>
             <div className="grid grid-2 gap-md">
-              <div style={{ textAlign: 'center' }}>
-                <p className="text-muted mb-sm">Toplam Maliyet</p>
-                <h3 style={{ fontSize: '2rem', color: 'var(--primary-green)' }}>
+              <div className="card text-center" style={{ backgroundColor: 'var(--light-green)', borderColor: 'rgba(124, 154, 112, 0.3)' }}>
+                <p className="text-muted mb-sm" style={{ fontWeight: '600', color: 'var(--dark-green)' }}>Toplam Gider</p>
+                <h3 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-serif)', color: 'var(--dark-green)', margin: 0, fontWeight: '600' }}>
                   {totalCost.toFixed(2)} ₺
                 </h3>
               </div>
-              <div style={{ textAlign: 'center' }}>
-                <p className="text-muted mb-sm">Alan Başına Maliyet</p>
-                <h3 style={{ fontSize: '2rem', color: 'var(--dark-green)' }}>
+              <div className="card text-center" style={{ backgroundColor: 'var(--lighter-green)', borderColor: 'rgba(124, 154, 112, 0.2)' }}>
+                <p className="text-muted mb-sm" style={{ fontWeight: '600', color: 'var(--primary-green)' }}>Alan Başına Gider</p>
+                <h3 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-serif)', color: 'var(--primary-green)', margin: 0, fontWeight: '600' }}>
                   {(totalCost / selectedField.area).toFixed(2)} ₺/{selectedField.areaUnit}
                 </h3>
               </div>
             </div>
 
             {fieldActivities.length > 0 && (
-              <table style={{ marginTop: '1.5rem' }}>
-                <thead>
-                  <tr>
-                    <th>Aktivite</th>
-                    <th>Sayı</th>
-                    <th>Toplam Maliyet</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(activitiesByType).map(([type, count]) => {
-                    const typeCost = fieldActivities
-                      .filter((a) => a.activityType === type)
-                      .reduce((sum, a) => sum + (a.cost || 0), 0);
+              <div style={{ overflowX: 'auto', marginTop: '1.5rem' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Aktivite</th>
+                      <th>Sayı</th>
+                      <th>Toplam Gider</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(activitiesByType).map(([type, count]) => {
+                      const typeCost = fieldActivities
+                        .filter((a) => a.activityType === type)
+                        .reduce((sum, a) => sum + (a.cost || 0), 0);
 
-                    return (
-                      <tr key={type}>
-                        <td style={{ fontWeight: '600' }}>{type}</td>
-                        <td>{count}</td>
-                        <td style={{ color: '#EF4444', fontWeight: '600' }}>
-                          {typeCost.toFixed(2)} ₺
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      return (
+                        <tr key={type}>
+                          <td style={{ fontWeight: '600', color: 'var(--dark-green)' }}>{type}</td>
+                          <td>{count}</td>
+                          <td style={{ color: 'var(--error-red)', fontWeight: '700' }}>
+                            {typeCost.toFixed(2)} ₺
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
 
           {/* Aktivite İstatistikleri */}
           <div className="card">
-            <h2 className="mb-md">📈 Aktivite İstatistikleri</h2>
+            <h2 className="mb-md" style={{ fontFamily: 'var(--font-serif)', color: 'var(--dark-green)', fontWeight: '500' }}>Aktivite İstatistikleri</h2>
 
             {fieldActivities.length > 0 ? (
               <div className="grid grid-3 gap-md">
@@ -157,33 +159,35 @@ const ReportsPage = () => {
                     key={type}
                     className="card text-center"
                     style={{
-                      backgroundColor: 'rgba(16, 185, 129, 0.05)',
-                      cursor: 'default'
+                      backgroundColor: 'var(--lighter-green)',
+                      borderColor: 'rgba(124, 154, 112, 0.2)',
+                      cursor: 'default',
+                      marginBottom: 0
                     }}
                   >
-                    <h3 style={{ fontSize: '2rem', margin: '0.5rem 0', color: 'var(--primary-green)' }}>
+                    <h3 style={{ fontSize: '2rem', fontFamily: 'var(--font-serif)', margin: '0.25rem 0', color: 'var(--primary-green)', fontWeight: '600' }}>
                       {count}
                     </h3>
-                    <p className="text-muted">{type}</p>
+                    <p style={{ fontWeight: '600', color: 'var(--primary-green)', margin: 0, fontSize: '0.9rem' }}>{type}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-center text-muted">Bu tarla için henüz aktivite kaydı yok</p>
+              <p className="text-center text-muted" style={{ padding: '2rem 0' }}>Bu tarla için henüz aktivite kaydı yok</p>
             )}
           </div>
         </>
       )}
 
       {!selectedFieldId && fields.length > 0 && (
-        <div className="card text-center">
-          <p className="text-muted">Raporları görmek için bir tarla seçiniz</p>
+        <div className="card text-center" style={{ padding: '3rem var(--spacing-lg)' }}>
+          <p className="text-muted" style={{ fontSize: '1.1rem', margin: 0 }}>Raporları görmek için yukarıdan bir tarla seçiniz</p>
         </div>
       )}
 
       {fields.length === 0 && (
-        <div className="card text-center">
-          <p className="text-muted mb-md">Henüz tarla eklenmemiş</p>
+        <div className="card text-center" style={{ padding: '3rem var(--spacing-lg)' }}>
+          <p className="text-muted mb-md" style={{ fontSize: '1.1rem' }}>Henüz tarla eklenmemiş</p>
         </div>
       )}
     </div>

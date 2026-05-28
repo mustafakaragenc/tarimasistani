@@ -34,7 +34,7 @@ const LoginForm = () => {
   return (
     <div className="container" style={{ maxWidth: '400px' }}>
       <div className="card mt-lg">
-        <h2 className="text-center mb-lg">🔐 Giriş Yap</h2>
+        <h2 className="text-center mb-lg">Giriş Yap</h2>
 
         {message && (
           <div className={`alert alert-${message.type}`}>{message.text}</div>
@@ -76,7 +76,7 @@ const LoginForm = () => {
           </button>
         </form>
 
-        <p className="text-center mt-lg">
+        <p className="text-center mt-lg" style={{ fontSize: '0.9rem' }}>
           Hesabınız yok mu?{' '}
           <a href="/register" style={{ fontWeight: '600' }}>
             Kayıt Olun
