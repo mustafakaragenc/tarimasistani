@@ -41,7 +41,6 @@ const Home = () => {
 
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon-wrapper">📊</div>
               <h3 className="feature-card-title">Tarlaları Takip Et</h3>
               <p className="feature-card-text">
                 Tüm tarım arazilerinizi konum, yüzölçümü ve ürün tipleriyle kaydedin. Her tarlanın güncel durumunu anlık olarak görüntüleyin.
@@ -49,7 +48,6 @@ const Home = () => {
             </div>
 
             <div className="feature-card">
-              <div className="feature-icon-wrapper">📈</div>
               <h3 className="feature-card-title">Aktiviteleri Planla</h3>
               <p className="feature-card-text">
                 Sulama, gübreleme, ilaçlama ve hasat faaliyetlerini takvim üzerinden düzenleyin. Hiçbir adımı kaçırmadan tam zamanında uygulayın.
@@ -57,7 +55,6 @@ const Home = () => {
             </div>
 
             <div className="feature-card">
-              <div className="feature-icon-wrapper">🎯</div>
               <h3 className="feature-card-title">Giderleri Analiz Et</h3>
               <p className="feature-card-text">
                 Yapılan harcamaları ve elde edilen gelirleri tarlalar bazında grafikleştirin. Karlılığınızı artıracak kararları verilerle alın.
