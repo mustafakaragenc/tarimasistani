@@ -15,7 +15,7 @@ Tarım Asistanı, çiftçilerin tarlalarında ekim, sulama, hasat, aktivite taki
 
 ## Canlı Demo Linkleri
 
-- Frontend: https://tarimasistani.vercel.app
+- Frontend:https://tarimasistani.vercel.app 
 - Backend: https://tarim-asistani-backend.onrender.com
 
 ## Kurulum Adımları
@@ -29,7 +29,7 @@ Tarım Asistanı, çiftçilerin tarlalarında ekim, sulama, hasat, aktivite taki
 
 ## Ekran Görüntüleri
 
-- Eklenecek
+- uml diagrams ve raporda resimleri bulabilirsiniz
 
 ## API Endpoint Listesi
 
